@@ -1,0 +1,78 @@
+-> Starts program
+Welcome to VSP!
+
+--- Instructions ---
+command. description <- type "command" to execute description
+
+--- General commands ---
+menu. - return to main menu
+list commands. - lists all commands
+search. - search for a channel or video
+list channels. - lists top 10 channels
+list videos. - lists top 10 videos
+quit. - exit application
+------------------------
+
+-> list videos
+Here are som videos (type number to check out)
+1. video1
+2. video2
+
+-> list channels
+1. channel1
+2. channel2
+
+-> search
+What would you like to watch?
+-> cars
+Results:
+1. (Channel) ILIKEcars: 201 subscribers
+2. (Video) How to fix your cars: 5000 views
+
+-> 1
+(Channel)
+--- Info  ---
+Name: ILIKEcars
+Created: date
+Subscribers: 201
+Country: Albania
+
+--- Actions --- 
+list subscribers. - lists all current channel subscribers
+list subscribes to. - lists all channels subscribed to by ILIKEcars
+
+--- Videos ---
+1. How to fix your cars: 5000 views
+2. I love fixings scooters: 2 views
+
+-> 2
+(Video)
+--- Info ---
+Title: I love fixing scooters
+Uploaded: 2005-12-24
+Views: 2
+Likes: 0
+Length: 35:40
+
+--- Actions ---
+channel. - go to creator
+like. - like the video
+
+--- Comments ---
+@lightdragoon88: 2008-01-22
+You cant even fix my wheels
+Likes: 22
+
+@NothingAfter: 2006-08-09
+I really like your hair
+Likes: 0
+
+-> list subscribes to
+1. (Channel) Bogdans pizzeria: 3 subscribers
+2. (Channel) ViviBun: 50 subscribers
+
+
+
+
+
+
