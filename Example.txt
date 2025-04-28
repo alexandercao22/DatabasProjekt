@@ -8,13 +8,13 @@ command. description <- type "command" to execute description
 menu. - return to main menu
 list commands. - lists all commands
 search. - search for a channel or video
+search sorted. - sorts videos by views and channels by subscribers
 list channels. - lists top 10 channels
 list videos. - lists top 10 videos
 quit. - exit application
 ------------------------
 
 -> list videos
-Here are som videos (type number to check out)
 1. video1
 2. video2
 
@@ -23,7 +23,7 @@ Here are som videos (type number to check out)
 2. channel2
 
 -> search
-What would you like to watch?
+Search for a channel or video:
 -> cars
 Results:
 1. (Channel) ILIKEcars: 201 subscribers
@@ -68,6 +68,7 @@ I really like your hair
 Likes: 0
 
 -> list subscribes to
+<ChannelName> is subscribed to:
 1. (Channel) Bogdans pizzeria: 3 subscribers
 2. (Channel) ViviBun: 50 subscribers
 
