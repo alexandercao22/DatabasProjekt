@@ -1,9 +1,9 @@
 """I/O"""
-# from Database import Database
+from Database import Database
 
 class Input:
     # db = Database('localhost', 'root', '1234', 'vsp') # Arvid
-    # db = Database('localhost', 'root', 'admin', 'vsp') # Alexander
+    db = Database('localhost', 'root', 'admin', 'vsp') # Alexander
 
     def GetInput(self):
         return input("-> ")
@@ -32,8 +32,8 @@ class Input:
             print("Search for a channel or video:")
             searchString = self.GetInput()
             print(f"Searching for {searchString}\n")
-            # cursor.callproc("search", searchString)
-            # results = db.Search(searchString)
+
+            results = self.db.Search(searchString)
             # display.PrintSearch(results)
             
             print("Enter a number to enter a channel or video:")
@@ -50,8 +50,8 @@ class Input:
             print("Search for a channel or video:")
             searchString = self.GetInput()
             print(f"Searching for {searchString}\n")
-            # cursor.callproc("searchSorted", searchString)
-            # results = db.SearchSorted(searchString)
+
+            results = self.db.SearchSorted(searchString)
             # display.PrintSearch(results)
             
             print("Enter a number to enter a channel or video:")
