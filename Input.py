@@ -2,6 +2,9 @@
 # from Database import Database
 
 class Input:
+    # db = Database('localhost', 'root', '1234', 'vsp') # Arvid
+    # db = Database('localhost', 'root', 'admin', 'vsp') # Alexander
+
     def GetInput(self):
         return input("-> ")
     
@@ -15,7 +18,7 @@ class Input:
                 num = int(num)
             except Exception:
                 print(f"Error: {num} is not a valid command! Try again:")
-                num = self.GetInput("-> ")
+                num = self.GetInput()
                 continue
             run = False
         return num
@@ -27,7 +30,7 @@ class Input:
 
         elif (userInput == "search"):
             print("Search for a channel or video:")
-            searchString = self.GetInput("-> ")
+            searchString = self.GetInput()
             print(f"Searching for {searchString}\n")
             # cursor.callproc("search", searchString)
             # results = db.Search(searchString)
@@ -45,7 +48,7 @@ class Input:
 
         elif (userInput == "search sorted"):
             print("Search for a channel or video:")
-            searchString = self.GetInput("-> ")
+            searchString = self.GetInput()
             print(f"Searching for {searchString}\n")
             # cursor.callproc("searchSorted", searchString)
             # results = db.SearchSorted(searchString)
@@ -54,6 +57,12 @@ class Input:
             print("Enter a number to enter a channel or video:")
             num = self.GetInput()
             num = self.GetChannelOrVideo(num)
+
+            if (num == 0):
+                return True
+            else:
+                # Get channel or video and enter it
+                print(f"Channel or video: {num}") # Remove this print after implemented
 
         elif (userInput == "list channels"):
             print(f"Some channels lol\n")
