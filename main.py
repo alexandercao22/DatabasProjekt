@@ -1,5 +1,6 @@
 """main"""
 import mysql.connector
+from Input import Input
 
 class Database:
     """database"""
@@ -17,7 +18,21 @@ class Database:
         self.cursor.execute(sql)
         return self.cursor.fetchall()
 
-db = Database('localhost', 'root', '1234', 'vsp')
-channels = db.fetch_all('Channels')
-for channel in channels:
-    print(channel['channel_name'], channel['country'])
+if __name__ == "__main__":
+    db = Database('localhost', 'root', 'admin', 'vsp')
+    channels = db.fetch_all('Channels')
+    for channel in channels:
+        print(channel['channel_name'], channel['country'])
+    print("\n")
+
+    print("Welcome to VSP!\n\n" \
+    "--- Instructions ---\n" \
+    "command. descriptioon <- type \"command\" to execute description\n")
+
+    app = Input()
+    app.GetCommand("menu")
+
+    run = True
+    while (run):
+        command = app.GetInput()
+        run = app.GetCommand(command)
