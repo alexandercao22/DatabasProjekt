@@ -95,24 +95,25 @@ END //
 CREATE PROCEDURE search(IN searchString varchar(64))
 NOT DETERMINISTIC
 BEGIN
-	SELECT channel_name AS SearchResult, getSubCount(channel_id) AS Total FROM Channels
+	SELECT channel_id AS ID, channel_name AS SearchResult, getSubCount(channel_id) AS Total FROM Channels
 		WHERE channel_name LIKE concat('%', searchString, '%')
 	UNION
-	SELECT video_name, views FROM Videos
+	SELECT video_id AS ID, video_name, views FROM Videos
 		WHERE video_name LIKE concat('%', searchString, '%');
 END//
 
 CREATE PROCEDURE searchSorted(IN searchString varchar(64))
 NOT DETERMINISTIC
 BEGIN
-	SELECT channel_name AS Name, getSubCount(channel_id) AS Metric, 1 AS SortOrder FROM Channels
+	SELECT channel_id AS ID, channel_name AS Name, getSubCount(channel_id) AS Metric, 1 AS SortOrder FROM Channels
 		WHERE channel_name LIKE concat('%', searchString, '%')
 	UNION
-	SELECT video_name AS Name, views AS Metric, 2 AS SortOrder FROM Videos
+	SELECT video_id AS ID, video_name AS Name, views AS Metric, 2 AS SortOrder FROM Videos
 		WHERE video_name LIKE concat('%', searchString, '%')
         ORDER BY SortOrder ASC, Metric DESC;
 END//
 DELIMITER ;
 
+DROP PROCEDURE searchSorted;
 
-
+CALL searchSorted('a');
