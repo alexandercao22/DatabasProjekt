@@ -25,7 +25,7 @@ class Input:
             run = False
         return num
     
-    def GetCommand(self, userInput):
+    def GetCommand1(self, userInput):
         if (userInput == "menu"):
             self.display.menu()
             # print commands
@@ -96,6 +96,18 @@ class Input:
             print(f"Error: {userInput} is not a valid command!")
         return True
     
+    # ------- New Functions -------
+    
+    def getSearchInput(self, sorted):
+        """Gets the search results of a string\n
+           True -> Sorted\n
+           False -> Unsorted
+        """
+        searchString = self.GetInput()
+        if (sorted):
+            return self.db.SearchSorted(searchString)
+        return self.db.Search(searchString)
+    
     def Menu(self):
         self.extraCommands.clear()  # Clear extraCommands
         self.arguments.clear()      # Clear arguments
@@ -109,7 +121,7 @@ class Input:
         self.extraCommands.clear()
         self.arguments.clear()
         self.display.search()
-        results = getSearchInput(False)  # Run getSearchInput which returns a list of search results
+        results = self.getSearchInput(False)  # Run getSearchInput which returns a list of search results
         self.display.searchResults(results)
         i = 1
         for result in results:
@@ -127,7 +139,7 @@ class Input:
         self.extraCommands.clear()
         self.arguments.clear()
         self.display.searchSorted()
-        results = getSearchInput(True)  # Run getSearchInput which returns a list of search results
+        results = self.getSearchInput(True)  # Run getSearchInput which returns a list of search results
         self.display.searchResults(results)
         i = 1
         for result in results:
@@ -193,15 +205,49 @@ class Input:
         self.extraCommands.clear()
         self.arguments.clear()
 
-    
-    
+    def getCommand(self):
+        while True:
+            command = self.GetInput()
+
+            if (command in self.baseCommands):
+                return self.baseCommands[command]
+            
+            if (command in self.extraCommands):
+                return self.extraCommands[command]
+            
+            print(f"Error: {command} is not valid! Try again:")
+
+    def run_commands(self, command):
+        """Validates commands and runs it if valid"""
+
+        if (command in self.baseCommands):
+            return self.baseCommands[command](self)
+        
+        if (command in self.extraCommands):
+            return self.extraCommands[command](self)
+        
+        print(f"Error: {command} is not valid! Try again:")
+        return True
+
+    def run(self):
+        """Main loop"""
+        run = self.run_commands("menu")
+        run = True
+        while run:
+            command = self.GetInput()
+            run = self.run_commands(command)
+
+    def quit(self):
+        """Quit"""
+        return False
+            
     baseCommands = {
         "menu": Menu,
         "seach": Search,
         "searchSorted": SearchSorted,
         "list channels": ListChannels,
         "list videos": ListVideos,
-        # "quit": 0
+        "quit": quit
     }
 
     extraCommands = {
