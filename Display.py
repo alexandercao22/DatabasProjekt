@@ -20,12 +20,11 @@ class Display:
             "\n"
             "--- General Commands ---\n"
             "menu. - return to main menu\n"
-            "list commands. - lists all general commands\n"
             "search. - search for a channel or video\n"
             "search sorted. - sorts videos by views and channels by subscribers\n"
             "list channels. - lists 10 random channels\n"
             "list videos. - lists 10 random videos\n"
-            "quit. - exit application\n"
+            "quit. - exit application"
         )
 
     def search(self):
@@ -39,7 +38,7 @@ class Display:
         """Displays text before searchSorted"""
         self.clear_terminal()
         print(
-            "Search for a channel or video (sorted):\n"
+            "Search for a channel or video (sorted):"
         )
 
     def random_channels(self, channels):

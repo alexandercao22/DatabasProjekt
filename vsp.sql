@@ -78,7 +78,7 @@ CREATE PROCEDURE listRandomChannels(
 	IN count INT
 )
 BEGIN
-	SELECT * FROM Channels
+	SELECT *, getSubCount(Channels.channel_id) AS sub_count FROM Channels
     ORDER BY RAND()
     LIMIT count;
 END //
@@ -116,7 +116,8 @@ END//
 DELIMITER ;
 
 DROP PROCEDURE search;
-DROP PROCEDURE searchSorted;
+DROP PROCEDURE listRandomChannels;
 
 CALL searchSorted('a');
 CALL search('a');
+CALL listRandomChannels(10);

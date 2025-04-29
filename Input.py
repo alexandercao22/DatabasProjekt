@@ -4,9 +4,23 @@ from display import Display
 
 class Input:
     """Input class"""
-    # db = Database('localhost', 'root', '1234', 'vsp') # Arvid
-    db = Database('localhost', 'root', 'admin', 'vsp') # Alexander
-    display = Display()
+
+    def __init__(self):
+        # self.db = Database('localhost', 'root', '1234', 'vsp') # Arvid
+        self.db = Database('localhost', 'root', 'admin', 'vsp') # Alexander
+        self.display = Display()
+        print(
+            "\n--- Command Template ---\n"
+            "command. description <- type 'command' to execute description\n"
+            "\n"
+            "--- General Commands ---\n"
+            "menu. - return to main menu\n"
+            "search. - search for a channel or video\n"
+            "search sorted. - sorts videos by views and channels by subscribers\n"
+            "list channels. - lists 10 random channels\n"
+            "list videos. - lists 10 random videos\n"
+            "quit. - exit application"
+        )
 
     def get_input(self):
         """General input function"""
@@ -28,8 +42,8 @@ class Input:
         self.arguments.clear()      # Clear arguments
         self.display.menu()         # Display relevand text
                                     # Generate new extraCommands
-        func = self.get_command()    # Get new command
-        func(self)                      # Run function
+        # func = self.get_command()    # Get new command
+        # func(self)                      # Run function
         return True
 
     def search(self):
