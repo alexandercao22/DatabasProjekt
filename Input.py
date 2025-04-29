@@ -1,266 +1,178 @@
 """I/O"""
-from Database import Database
-from Display import Display
+from database import Database
+from display import Display
 
 class Input:
+    """Input class"""
     # db = Database('localhost', 'root', '1234', 'vsp') # Arvid
     db = Database('localhost', 'root', 'admin', 'vsp') # Alexander
     display = Display()
-    
-    def GetInput(self):
+
+    def get_input(self):
+        """General input function"""
         return input("-> ")
-    
-    def GetChannelOrVideo(self, num):
-        run = True
-        while (run):
-            if (num == "return"):
-                return 0
 
-            try:
-                num = int(num)
-            except Exception:
-                print(f"Error: {num} is not a valid command! Try again:")
-                num = self.GetInput()
-                continue
-            run = False
-        return num
-    
-    def GetCommand1(self, userInput):
-        if (userInput == "menu"):
-            self.display.menu()
-            # print commands
-
-        elif (userInput == "search"):
-            print("Search for a channel or video:")
-            searchString = self.GetInput()
-            print(f"Searching for {searchString}\n")
-
-            results = self.db.Search(searchString)
-            self.display.searchResults(results)
-            
-            print("Enter a number to enter a channel or video:")
-            num = self.GetInput()
-            num = self.GetChannelOrVideo(num)
-
-            if (num == 0):
-                return True
-            else:
-                # Get channel or video and enter it
-                print(f"Channel or video: {num}") # Remove this print after implemented
-
-        elif (userInput == "search sorted"):
-            print("Search for a channel or video:")
-            searchString = self.GetInput()
-            print(f"Searching for {searchString}\n")
-
-            results = self.db.SearchSorted(searchString)
-            self.display.searchResults(results)
-            
-            print("Enter a number to enter a channel or video:")
-            num = self.GetInput()
-            num = self.GetChannelOrVideo(num)
-
-            if (num == 0):
-                return True
-            else:
-                # Get channel or video and enter it
-                print(f"Channel or video: {num}") # Remove this print after implemented
-
-        elif (userInput == "list channels"):
-            print("Some channels lol\n")
-            # results = db.ListChannels()
-            # display.PrintChannels(results)
-
-            print("Enter a number to enter a channel:")
-            num = self.GetInput()
-            num = self.GetChannelOrVideo(num)
-
-            # Get channel and enter it
-            print(f"Channel: {num}") # Remove this print after implemented
-
-        elif (userInput == "list videos"):
-            print("Some videos lol\n")
-            # results = db.ListVideos()
-            # display.PrintVideos(results)
-
-            print("Enter a number to enter a video:")
-            num = self.GetInput()
-            num = self.GetChannelOrVideo(num)
-
-            # Get video and enter it
-            print(f"Video: {num}") # Remove this print after implemented
-
-        elif (userInput == "quit"):
-            return False
-        else:
-            print(f"Error: {userInput} is not a valid command!")
-        return True
-    
-    # ------- New Functions -------
-    
-    def getSearchInput(self, sorted):
+    def get_search_input(self, is_sorted):
         """Gets the search results of a string\n
            True -> Sorted\n
            False -> Unsorted
         """
-        searchString = self.GetInput()
-        if (sorted):
-            return self.db.SearchSorted(searchString)
-        return self.db.Search(searchString)
-    
-    def Menu(self):
+        search_string = self.get_input()
+        if is_sorted:
+            return self.db.search_sorted(search_string)
+        return self.db.search(search_string)
+
+    def menu(self):
+        """Prints all base commands"""
         self.extraCommands.clear()  # Clear extraCommands
         self.arguments.clear()      # Clear arguments
         self.display.menu()         # Display relevand text
                                     # Generate new extraCommands
-        func = self.getCommand()    # Get new command
+        func = self.get_command()    # Get new command
         func(self)                      # Run function
         return True
 
-    def Search(self):
+    def search(self):
+        """Get search results, prints it and creates extra commands"""
         self.extraCommands.clear()
         self.arguments.clear()
         self.display.search()
-        results = self.getSearchInput(False)  # Run getSearchInput which returns a list of search results
-        self.display.searchResults(results)
+        results = self.get_search_input(False) # List of search results
+        self.display.search_results(results)
         i = 1
         for result in results:
             if result['Type'] == 'Channel':
-                self.extraCommands[str(i)] = self.ShowChannel
+                self.extraCommands[str(i)] = self.show_channel
                 self.arguments[str(i)] = result
                 i += 1
             elif result['Type'] == 'Video':
-                self.extraCommands[str(i)] = self.ShowVideo
+                self.extraCommands[str(i)] = self.show_video
                 self.arguments[str(i)] = result
                 i += 1
         return True
-    
-    def SearchSorted(self):
+
+    def search_sorted(self):
+        """Get search results (sorted), prints it and creates extra commands"""
         self.extraCommands.clear()
         self.arguments.clear()
-        self.display.searchSorted()
-        results = self.getSearchInput(True)  # Run getSearchInput which returns a list of search results
-        self.display.searchResults(results)
+        self.display.search_sorted()
+        results = self.get_search_input(True) # List of search results
+        self.display.search_results(results)
         i = 1
         for result in results:
             if result['Type'] == 'Channel':
-                self.extraCommands[str(i)] = self.ShowChannel
+                self.extraCommands[str(i)] = self.show_channel
                 self.arguments[str(i)] = result
                 i += 1
             elif result['Type'] == 'Video':
-                self.extraCommands[str(i)] = self.ShowVideo
+                self.extraCommands[str(i)] = self.show_video
                 self.arguments[str(i)] = result
                 i += 1
         return True
-    
-    def ListChannels(self):
+
+    def list_channels(self):
+        """Get random channels, prints them and creates extra commands"""
         self.extraCommands.clear()
         self.arguments.clear()
-        channels = self.db.getRandomChannels()
-        self.display.randomChannels(channels)
+        channels = self.db.get_random_channels()
+        self.display.random_channels(channels)
         i = 1
         for channel in channels:
-            self.extraCommands[str(i)] = self.ShowChannel
-            self.arguments[str(i)] = channel
-            i += 1
-        return True
-    
-    def ListVideos(self):
-        self.extraCommands.clear()
-        self.arguments.clear()
-        videos = self.db.getRandomVideos()
-        self.display.randomVideos(videos)
-        i = 1
-        for video in videos:
-            self.extraCommands[str(i)] = self.ShowVideo
-            self.arguments[str(i)] = video         
-            i += 1
-        return True
-    
-    def ListSubscribers(self, channel):
-        self.extraCommands.clear()
-        self.arguments.clear()
-        subscribers = self.db.getSubscribers(channel['channel_id'])
-        self.display.listSubscribers(channel, subscribers)
-        i = 1
-        for channel in subscribers:
-            self.extraCommands[str(i)] = self.ShowChannel
+            self.extraCommands[str(i)] = self.show_channel
             self.arguments[str(i)] = channel
             i += 1
         return True
 
-    def ListSubscribedTo(self, channel):
+    def list_videos(self):
+        """Get random videos, prints them and creates extra commands"""
         self.extraCommands.clear()
         self.arguments.clear()
-        subscriptions = self.db.getSubscribedTo(channel['channel_id'])
-        self.display.listSubscribedTo(channel, subscriptions)
+        videos = self.db.get_random_videos()
+        self.display.random_videos(videos)
         i = 1
-        for channel in subscriptions:
-            self.extraCommands[str(i)] = self.ShowChannel
+        for video in videos:
+            self.extraCommands[str(i)] = self.show_video
+            self.arguments[str(i)] = video
+            i += 1
+        return True
+
+    def list_subscribers(self, channel_id):
+        """Get subscribers, prints them and creates extra commands"""
+        self.extraCommands.clear()
+        self.arguments.clear()
+        subscribers = self.db.get_subscribers(channel_id['channel_id'])
+        self.display.list_subscribers(channel_id, subscribers)
+        i = 1
+        for channel in subscribers:
+            self.extraCommands[str(i)] = self.show_channel
             self.arguments[str(i)] = channel
             i += 1
         return True
-    
-    def Dummy(self, temp):
-        """A dummy function to only return True"""
+
+    def list_subscribed_to(self, channel_id):
+        """Get subscribes to, prints them and creates extra commands"""
+        self.extraCommands.clear()
+        self.arguments.clear()
+        subscriptions = self.db.get_subscribed_to(channel_id['channel_id'])
+        self.display.list_subscribed_to(channel_id, subscriptions)
+        i = 1
+        for channel in subscriptions:
+            self.extraCommands[str(i)] = self.show_channel
+            self.arguments[str(i)] = channel
+            i += 1
         return True
-    
-    def ShowChannel(self, channel):
+
+    def dummy(self, temp):
+        """A dummy function to only return True"""
+        return self == temp
+
+    def show_channel(self, channel):
+        """Prints channel"""
         print(f"Channel: {channel}")
         self.extraCommands.clear()
         self.arguments.clear()
-        return self.Dummy
+        return self.dummy
 
-    def ShowVideo(self, video):
+    def show_video(self, video):
+        """Prints video"""
         print(f"Video: {video}")
         self.extraCommands.clear()
         self.arguments.clear()
-        return self.Dummy
+        return self.dummy
 
-    def getCommand(self):
+    def get_command(self):
+        """Get command input and validates the input. 
+        Returns a function"""
         while True:
-            command = self.GetInput()
+            command = self.get_input()
 
-            if (command in self.baseCommands):
+            if command in self.baseCommands:
                 return self.baseCommands[command]
-            
-            if (command in self.extraCommands):
-                if (command in self.arguments):
+
+            if command in self.extraCommands:
+                if command in self.arguments:
                     return self.extraCommands[command](self.arguments[command])
                 return self.extraCommands[command]
-            
+
             print(f"Error: {command} is not valid! Try again:")
-
-    def run_commands(self, command):
-        """Validates commands and runs it if valid"""
-
-        if (command in self.baseCommands):
-            return self.baseCommands[command](self)
-        
-        if (command in self.extraCommands):
-            return self.extraCommands[command](self)
-        
-        print(f"Error: {command} is not valid! Try again:")
-        return True
 
     def run(self):
         """Main loop"""
         run = True
         while run:
-            func = self.getCommand()
+            func = self.get_command()
             run = func(self)
-
 
     def quit(self):
         """Quit"""
         return False
-            
+
     baseCommands = {
-        "menu": Menu,
-        "search": Search,
-        "search sorted": SearchSorted,
-        "list channels": ListChannels,
-        "list videos": ListVideos,
+        "menu": menu,
+        "search": search,
+        "search sorted": search_sorted,
+        "list channels": list_channels,
+        "list videos": list_videos,
         "quit": quit
     }
 
@@ -271,6 +183,3 @@ class Input:
     arguments = {
 
     }
-
-    
-    

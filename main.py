@@ -1,6 +1,5 @@
 """main"""
-from Input import Input
-from Database import Database
+from input import Input
 
 if __name__ == "__main__":
 

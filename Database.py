@@ -13,54 +13,60 @@ class Database:
         self.cursor = self.connection.cursor(dictionary=True)
 
     def fetch_all(self, table):
+        """Get whole table"""
         sql = f"SELECT * FROM {table}"
         self.cursor.execute(sql)
         return self.cursor.fetchall()
-    
-    def getRandomChannels(self):
+
+    def get_random_channels(self):
+        """Get random channels"""
         ret = []
         self.cursor.callproc('listRandomChannels', [10])
         for result in self.cursor.stored_results():
             ret = result.fetchall()
             break
         return ret
-    
-    def getRandomVideos(self):
+
+    def get_random_videos(self):
+        """Get random videos"""
         ret = []
         self.cursor.callproc('listRandomVideos', [10])
         for result in self.cursor.stored_results():
             ret = result.fetchall()
             break
         return ret
-    
-    def getSubscribers(self, channel_id):
+
+    def get_subscribers(self, channel_id):
+        """Get subscribers of a channel"""
         ret = []
         self.cursor.callproc('listSubscribers', [channel_id])
         for result in self.cursor.stored_results():
             ret = result.fetchall()
             break
         return ret
-    
-    def getSubscribedTo(self, channel_id):
+
+    def get_subscribed_to(self, channel_id):
+        """Get channels subscribed by a channel"""
         ret = []
         self.cursor.callproc('listSubscribedTo', [channel_id])
         for result in self.cursor.stored_results():
             ret = result.fetchall()
             break
         return ret
-    
-    def Search(self, searchString):
+
+    def search(self, search_string):
+        """Search in the database"""
         ret = []
-        self.cursor.callproc('search', [searchString])
+        self.cursor.callproc('search', [search_string])
         for result in self.cursor.stored_results():
             ret = result.fetchall()
             break
         return ret
-        
-    
-    def SearchSorted(self, searchString):
+
+    def search_sorted(self, search_string):
+        """Search in the database"""
         ret = []
-        self.cursor.callproc('searchSorted', [searchString])
+        self.cursor.callproc('searchSorted', [search_string])
         for result in self.cursor.stored_results():
             ret = result.fetchall()
             break
