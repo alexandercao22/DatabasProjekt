@@ -95,10 +95,10 @@ END //
 CREATE PROCEDURE search(IN searchString varchar(64))
 NOT DETERMINISTIC
 BEGIN
-	SELECT channel_id AS ID, channel_name AS SearchResult, getSubCount(channel_id) AS Metric, 'Channel' AS Type FROM Channels
+	SELECT channel_id AS ID, channel_name AS Name, getSubCount(channel_id) AS Metric, 'Channel' AS Type FROM Channels
 		WHERE channel_name LIKE concat('%', searchString, '%')
 	UNION
-	SELECT video_id AS ID, video_name, views, 'Video' AS Type FROM Videos
+	SELECT video_id AS ID, video_name AS Name, views AS Metric, 'Video' AS Type FROM Videos
 		WHERE video_name LIKE concat('%', searchString, '%')
         ORDER BY RAND();
 END//

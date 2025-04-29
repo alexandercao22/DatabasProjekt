@@ -63,16 +63,17 @@ class Display:
     def searchResults(self, results):
         """Displays a list of results containing channels and/or videos"""
         self.clearTerminal()
-        if len(results) == 0:
+        if len([results]) == 0:
             print("Could not find any matching content")
         else:
             print("Search results:\n")
             i = 0
             for result in results:
                 if result['Type'] == 'Channel':
-                    print(f"{i}. {result['channel_name']}: {result['Metric']} subscribers")
+                    print(f"{i}. {result['Name']}: {result['Metric']} subscribers")
                 elif result['Type'] == 'Video':
-                    print(f"{i}. {result['video_name']}: {result['Metric']} views")
+                    print(f"{i}. {result['Name']}: {result['Metric']} views")
+                i += 1
 
     def channel(self, channel, videos):
         """Displays all information of a channel and the videos uploaded by that channel"""

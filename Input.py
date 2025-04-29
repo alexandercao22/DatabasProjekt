@@ -1,9 +1,11 @@
 """I/O"""
 from Database import Database
+from Display import Display
 
 class Input:
     # db = Database('localhost', 'root', '1234', 'vsp') # Arvid
     db = Database('localhost', 'root', 'admin', 'vsp') # Alexander
+    display = Display()
 
     def GetInput(self):
         return input("-> ")
@@ -25,7 +27,7 @@ class Input:
     
     def GetCommand(self, userInput):
         if (userInput == "menu"):
-            print(f"Menu lol\nGeneral commands\n")
+            self.display.menu()
             # print commands
 
         elif (userInput == "search"):
@@ -34,7 +36,8 @@ class Input:
             print(f"Searching for {searchString}\n")
 
             results = self.db.Search(searchString)
-            # display.PrintSearch(results)
+            for temp in results:
+                self.display.searchResults(temp)
             
             print("Enter a number to enter a channel or video:")
             num = self.GetInput()

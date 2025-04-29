@@ -1,4 +1,4 @@
-"""Database"""
+"""Database class"""
 import mysql.connector
 
 class Database:
@@ -16,3 +16,11 @@ class Database:
         sql = f"SELECT * FROM {table}"
         self.cursor.execute(sql)
         return self.cursor.fetchall()
+    
+    def Search(self, searchString):
+        self.cursor.callproc('search', [searchString])
+        return self.cursor.stored_results()
+    
+    def SearchSorted(self, searchString):
+        self.cursor.callproc('searchSorted', [searchString])
+        return self.cursor.stored_results()
