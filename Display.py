@@ -63,7 +63,7 @@ class Display:
     def searchResults(self, results):
         """Displays a list of results containing channels and/or videos"""
         self.clearTerminal()
-        if len([results]) == 0:
+        if len(results) == 0:
             print("Could not find any matching content")
         else:
             print("Search results:\n")
@@ -110,9 +110,9 @@ class Display:
             )
         print("--- Actions ---")
         print("channel. - go to video creator\n",
-              f"like. - like the video\n\n"
+              "like. - like the video\n\n"
             )
-        print(f"--- Comments ---")
+        print("--- Comments ---")
         for comment in comments:
             print(
                 f"@{comment['channel_name']}: {comment['upload_date']}\n",

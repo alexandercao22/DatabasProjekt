@@ -3,8 +3,8 @@ from Database import Database
 from Display import Display
 
 class Input:
-    # db = Database('localhost', 'root', '1234', 'vsp') # Arvid
-    db = Database('localhost', 'root', 'admin', 'vsp') # Alexander
+    db = Database('localhost', 'root', '1234', 'vsp') # Arvid
+    # db = Database('localhost', 'root', 'admin', 'vsp') # Alexander
     display = Display()
 
     def GetInput(self):
@@ -36,8 +36,7 @@ class Input:
             print(f"Searching for {searchString}\n")
 
             results = self.db.Search(searchString)
-            for temp in results:
-                self.display.searchResults(temp)
+            self.display.searchResults(results)
             
             print("Enter a number to enter a channel or video:")
             num = self.GetInput()
@@ -55,7 +54,7 @@ class Input:
             print(f"Searching for {searchString}\n")
 
             results = self.db.SearchSorted(searchString)
-            # display.PrintSearch(results)
+            self.display.searchResults(results)
             
             print("Enter a number to enter a channel or video:")
             num = self.GetInput()
@@ -68,7 +67,7 @@ class Input:
                 print(f"Channel or video: {num}") # Remove this print after implemented
 
         elif (userInput == "list channels"):
-            print(f"Some channels lol\n")
+            print("Some channels lol\n")
             # results = db.ListChannels()
             # display.PrintChannels(results)
 
@@ -80,7 +79,7 @@ class Input:
             print(f"Channel: {num}") # Remove this print after implemented
 
         elif (userInput == "list videos"):
-            print(f"Some videos lol\n")
+            print("Some videos lol\n")
             # results = db.ListVideos()
             # display.PrintVideos(results)
 

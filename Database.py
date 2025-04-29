@@ -18,9 +18,18 @@ class Database:
         return self.cursor.fetchall()
     
     def Search(self, searchString):
+        ret = []
         self.cursor.callproc('search', [searchString])
-        return self.cursor.stored_results()
+        for result in self.cursor.stored_results():
+            ret = result.fetchall()
+            break
+        return ret
+        
     
     def SearchSorted(self, searchString):
+        ret = []
         self.cursor.callproc('searchSorted', [searchString])
-        return self.cursor.stored_results()
+        for result in self.cursor.stored_results():
+            ret = result.fetchall()
+            break
+        return ret
