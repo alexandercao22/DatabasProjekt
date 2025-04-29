@@ -69,11 +69,11 @@ class Display:
             print("Search results:\n")
             i = 0
             for result in results:
+                i += 1
                 if result['Type'] == 'Channel':
                     print(f"{i}. {result['Name']}: {result['Metric']} subscribers")
                 elif result['Type'] == 'Video':
                     print(f"{i}. {result['Name']}: {result['Metric']} views")
-                i += 1
 
     def channel(self, channel, videos):
         """Displays all information of a channel and the videos uploaded by that channel"""
@@ -128,7 +128,7 @@ class Display:
             i += 1
             print(f"{i}. {channel['channel_name']}: {channel['sub_count']} subscribers")
 
-    def listSubscriptions(self, subscriber, channels):
+    def listSubscribedTo(self, subscriber, channels):
         """Displays all chanels subscribed to by 'subscriber'"""
         print(f"Here are the channels that {subscriber['channel_name']} is subscribed to:")
         i = 0
