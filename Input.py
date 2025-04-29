@@ -3,10 +3,10 @@ from Database import Database
 from Display import Display
 
 class Input:
-    db = Database('localhost', 'root', '1234', 'vsp') # Arvid
-    # db = Database('localhost', 'root', 'admin', 'vsp') # Alexander
+    # db = Database('localhost', 'root', '1234', 'vsp') # Arvid
+    db = Database('localhost', 'root', 'admin', 'vsp') # Alexander
     display = Display()
-
+    
     def GetInput(self):
         return input("-> ")
     
@@ -95,3 +95,19 @@ class Input:
         else:
             print(f"Error: {userInput} is not a valid command!")
         return True
+
+    
+    baseCommands = {
+        "menu": Menu,
+        "list commands": ListCommands,
+        "seach": Search,
+        "searchSorted": SearchSorted,
+        "list channels": ListChannels,
+        "list videos": ListVideos,
+        "quit": 0
+    }
+
+    extraCommands = {
+
+    }
+    
