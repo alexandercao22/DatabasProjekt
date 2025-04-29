@@ -114,7 +114,7 @@ class Input:
         self.display.menu()         # Display relevand text
                                     # Generate new extraCommands
         func = self.getCommand()    # Get new command
-        func()                      # Run function
+        func(self)                      # Run function
         return True
 
     def Search(self):
@@ -125,11 +125,11 @@ class Input:
         self.display.searchResults(results)
         i = 1
         for result in results:
-            if result['type'] == 'Channel':
+            if result['Type'] == 'Channel':
                 self.extraCommands[str(i)] = self.ShowChannel
                 self.arguments[str(i)] = result
                 i += 1
-            elif result['type'] == 'Video':
+            elif result['Type'] == 'Video':
                 self.extraCommands[str(i)] = self.ShowVideo
                 self.arguments[str(i)] = result
                 i += 1
@@ -143,11 +143,11 @@ class Input:
         self.display.searchResults(results)
         i = 1
         for result in results:
-            if result['type'] == 'Channel':
+            if result['Type'] == 'Channel':
                 self.extraCommands[str(i)] = self.ShowChannel
                 self.arguments[str(i)] = result
                 i += 1
-            elif result['type'] == 'Video':
+            elif result['Type'] == 'Video':
                 self.extraCommands[str(i)] = self.ShowVideo
                 self.arguments[str(i)] = result
                 i += 1
@@ -201,9 +201,21 @@ class Input:
             i += 1
         return True
     
+    def Dummy(self, temp):
+        """A dummy function to only return True"""
+        return True
+    
     def ShowChannel(self, channel):
+        print(f"Channel: {channel}")
         self.extraCommands.clear()
         self.arguments.clear()
+        return self.Dummy
+
+    def ShowVideo(self, video):
+        print(f"Video: {video}")
+        self.extraCommands.clear()
+        self.arguments.clear()
+        return self.Dummy
 
     def getCommand(self):
         while True:
@@ -213,6 +225,8 @@ class Input:
                 return self.baseCommands[command]
             
             if (command in self.extraCommands):
+                if (command in self.arguments):
+                    return self.extraCommands[command](self.arguments[command])
                 return self.extraCommands[command]
             
             print(f"Error: {command} is not valid! Try again:")
@@ -231,11 +245,11 @@ class Input:
 
     def run(self):
         """Main loop"""
-        run = self.run_commands("menu")
         run = True
         while run:
-            command = self.GetInput()
-            run = self.run_commands(command)
+            func = self.getCommand()
+            run = func(self)
+
 
     def quit(self):
         """Quit"""
@@ -243,8 +257,8 @@ class Input:
             
     baseCommands = {
         "menu": Menu,
-        "seach": Search,
-        "searchSorted": SearchSorted,
+        "search": Search,
+        "search sorted": SearchSorted,
         "list channels": ListChannels,
         "list videos": ListVideos,
         "quit": quit

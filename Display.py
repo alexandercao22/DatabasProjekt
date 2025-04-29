@@ -32,7 +32,7 @@ class Display:
         """Displays text before search"""
         self.clearTerminal()
         print(
-            "Search for a channel or video:\n"
+            "Search for a channel or video:"
         )
 
     def searchSorted(self):
