@@ -10,9 +10,9 @@ SELECT * FROM channels;
 INSERT INTO Channels (channel_id, channel_name, creation_date, country)
 VALUES
 (1, 'Ludwig', '2011-08-15', 'USA'),
-(2, 'MrBeast' '2012-02-20', 'USA'),
+(2, 'MrBeast', '2012-02-20', 'USA'),
 (3, 'PewDiePie', '2010-04-29', "Japan"),
-(4, 'SampeV2' '2013-03-04', 'Sweden'),
+(4, 'SampeV2', '2013-03-04', 'Sweden'),
 (5, 'ILIKEcars', '2012-07-12', 'Albania');
 
 INSERT INTO Videos (video_id, channel_id, video_name, views, upload_date, likes, length)
@@ -21,16 +21,20 @@ VALUES
 (2, 1, 'I Burried $100,000, Go Find It', 16000, '2022-08-02', 600, '00:11:42'),
 (3, 2, '7 Days Stranded At Sea', 355000, '2023-08-05', 7900, '00:18:04'),
 (4, 3, 'I installed Linux (so should you)', 3401, '2023-04-26', 160, '00:22:52'),
-(5, 5, 'How to fix your cars', 5000, '2012-12-24', 2, '00:35:40');
+(5, 5, 'How to fix your cars', 5000, '2012-12-24', 2, '00:35:40'),
+(6, 4, 'Tråkig video haha', 0, '2025-04-28', 0, '00:11:11');
 
 INSERT INTO Comments (comment_id, video_id, channel_id, upload_date, text, likes)
 VALUES
 (1, 1, 4, '2025-04-27', 'I like baguettes!', 420),
 (2, 1, 2, '2025-04-28', 'Oui oui, merci sacre bleu', 59);
 
-INSERT INTO Subscribers (subscriber_id, subscribes_to_id)
+INSERT INTO Subscribes (subscriber_id, subscribed_to_id)
 VALUES
 (1, 2),
 (1, 3),
 (3, 5),
-(2, 4);
+(2, 4),
+(4, 2),
+(1, 4),
+(3, 4);
