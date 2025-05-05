@@ -1,5 +1,5 @@
 """main"""
-from input import Input
+from Input import Input
 
 if __name__ == "__main__":
 

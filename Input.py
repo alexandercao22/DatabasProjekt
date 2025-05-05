@@ -1,6 +1,6 @@
 """I/O"""
-from database import Database
-from display import Display
+from Database import Database
+from Display import Display
 
 class Input:
     """Input class"""
@@ -136,23 +136,19 @@ class Input:
             i += 1
         return True
 
-    def dummy(self, temp):
-        """A dummy function to only return True"""
-        return self == temp
-
     def show_channel(self, channel):
         """Prints channel"""
         print(f"Channel: {channel}")
         self.extraCommands.clear()
         self.arguments.clear()
-        return self.dummy
+        return True
 
     def show_video(self, video):
         """Prints video"""
         print(f"Video: {video}")
         self.extraCommands.clear()
         self.arguments.clear()
-        return self.dummy
+        return True
 
     def get_command(self):
         """Get command input and validates the input. 
@@ -161,12 +157,12 @@ class Input:
             command = self.get_input()
 
             if command in self.baseCommands:
-                return self.baseCommands[command]
+                return self.baseCommands[command](self)
 
             if command in self.extraCommands:
                 if command in self.arguments:
                     return self.extraCommands[command](self.arguments[command])
-                return self.extraCommands[command]
+                return self.extraCommands[command](self)
 
             print(f"Error: {command} is not valid! Try again:")
 
@@ -174,8 +170,7 @@ class Input:
         """Main loop"""
         run = True
         while run:
-            func = self.get_command()
-            run = func(self)
+            run = self.get_command()
 
     def quit(self):
         """Quit"""
