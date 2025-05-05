@@ -9,11 +9,15 @@ DROP TABLE IF EXISTS Videos;
 DROP TABLE IF EXISTS Channels;
 
 DROP PROCEDURE IF EXISTS listComments;
+DROP PROCEDURE IF EXISTS likeVideo;
 DROP FUNCTION IF EXISTS getSubCount;
 DROP PROCEDURE IF EXISTS listSubscribers;
 DROP PROCEDURE IF EXISTS listSubscribedTo;
+DROP PROCEDURE IF EXISTS getChannel;
+DROP PROCEDURE IF EXISTS getVideo;
 DROP PROCEDURE IF EXISTS listRandomChannels;
 DROP PROCEDURE IF EXISTS listRandomVideos;
+DROP PROCEDURE IF EXISTS listVideosByChannel;
 DROP PROCEDURE IF EXISTS search;
 DROP PROCEDURE IF EXISTS searchSorted;
 
@@ -52,21 +56,21 @@ VALUES
 (3, 2, '7 Days Stranded At Sea', 355000, '2023-08-05', 7900, '00:18:04'),
 (4, 3, 'I installed Linux (so should you)', 3401, '2023-04-26', 160, '00:22:52'),
 (5, 5, 'How to fix your cars', 5000, '2012-12-24', 2, '00:35:40'),
-(6, 6, 'Testing What Happens If You Jump On A Moving Train', 10571625, '2025-04-12', '00:18:15'),
-(7, 6, 'Vortex Cannon vs Drone', 29387933, '2024-04-20', '00:20:43'),
-(8, 6, 'My Secret Warehouse Tour', 36072083, '2022-06-15', '00:17:15'),
-(9, 7, 'Tortoise vs. Hare - Who Wins?', 3829665, '2025-04-26', '00:14:59'),
-(10, 7, 'Dude Perfect vs Keanu Reeves (150 MPH)', 5153086, '2025-01-25', '00:26:27'),
-(11, 8, 'HANSIUS FLYTTAR IN | Edvin Törnblom', 457757, '2025-04-27', '01:12:17'),
-(12, 8, 'HANSIUS FLYTTAR IN hos HAMPUS HEDSTRÖM', 2258103, '2020-03-29', '00:46:36'),
-(13, 9, 'NBA Playoff Reaction', 154482, '2025-05-05', '00:16:33'),
-(14, 9, 'Jake Paul vs. Mike Tyson FIGHT HIGHLIGHTS', 36494447, '2024-11-16', '00:02:34'),
-(15, 10, '⁠SIDEMEN $5,000,000 SCAVENGER HUNT', 6070085, '2025-04-27', '01:39:08'),
-(16, 10, '⁠SIDEMEN TEST VIRAL TIKTOK FOODS', 7279502, '2025-03-16', '01:28:10'),
-(17, 11, '⁠Dream VS Daquavis $100,000 PvP Duel', 6038479, '2025-05-03', '00:35:25'),
-(18, 11, 'Minecraft Speedrunner VS 3 Hunters GRAND FINALE', 136120019, '2020-08-07', '00:41:47'),
-(19, 12, 'THIS ISN’T GOOD | Schedule I', 1272868, '2025-04-30', '01:20:10'),
-(20, 12, 'MY FIRST DEALER | Schedule I', 2600696, '2025-04-04', '01:30:52');
+(6, 6, 'Testing What Happens If You Jump On A Moving Train', 10571625, '2025-04-12', 247326, '00:18:15'),
+(7, 6, 'Vortex Cannon vs Drone', 29387933, '2024-04-20', 591585, '00:20:43'),
+(8, 6, 'My Secret Warehouse Tour', 36072083, '2022-06-15', 863866, '00:17:15'),
+(9, 7, 'Tortoise vs. Hare - Who Wins?', 3829665, '2025-04-26', 67667, '00:14:59'),
+(10, 7, 'Dude Perfect vs Keanu Reeves (150 MPH)', 5153086, '2025-01-25', 157236, '00:26:27'),
+(11, 8, 'HANSIUS FLYTTAR IN | Edvin Törnblom', 457757, '2025-04-27', 12552, '01:12:17'),
+(12, 8, 'HANSIUS FLYTTAR IN hos HAMPUS HEDSTRÖM', 2258103, '2020-03-29', 22894, '00:46:36'),
+(13, 9, 'NBA Playoff Reaction', 154482, '2025-05-05', 1605, '00:16:33'),
+(14, 9, 'Jake Paul vs. Mike Tyson FIGHT HIGHLIGHTS', 36494447, '2024-11-16', 274955, '00:02:34'),
+(15, 10, '⁠SIDEMEN $5,000,000 SCAVENGER HUNT', 6070085, '2025-04-27', 209666, '01:39:08'),
+(16, 10, '⁠SIDEMEN TEST VIRAL TIKTOK FOODS', 7279502, '2025-03-16', 196721, '01:28:10'),
+(17, 11, '⁠Dream VS Daquavis $100,000 PvP Duel', 6038479, '2025-05-03', 469305, '00:35:25'),
+(18, 11, 'Minecraft Speedrunner VS 3 Hunters GRAND FINALE', 136120019, '2020-08-07', 4902654, '00:41:47'),
+(19, 12, 'THIS ISN’T GOOD | Schedule I', 1272868, '2025-04-30', 42208, '01:20:10'),
+(20, 12, 'MY FIRST DEALER | Schedule I', 2600696, '2025-04-04', 132436, '01:30:52');
 
 INSERT INTO Comments (comment_id, video_id, channel_id, upload_date, text, likes)
 VALUES
@@ -85,9 +89,18 @@ CREATE PROCEDURE listComments(
 	IN video_id INT
 )
 BEGIN
-	SELECT Channels.channel_name, Comments.upload_date, Comments.text FROM 
+	SELECT Comments.channel_id, Channels.channel_name, Comments.upload_date, comments.text, comments.likes FROM 
     Comments INNER JOIN Channels ON Comments.channel_id = Channels.channel_id
     WHERE video_id = Comments.video_id;
+END //
+
+CREATE PROCEDURE likeVideo(
+	IN video_id INT
+)
+BEGIN
+	UPDATE Videos
+    SET Videos.likes = Videos.likes + 1
+    WHERE Videos.video_id = video_id;
 END //
 
 CREATE FUNCTION getSubCount(
@@ -107,7 +120,7 @@ CREATE PROCEDURE listSubscribers(
 	IN channel_id INT
 )
 BEGIN
-	SELECT Channels.channel_name, getSubCount(Channels.channel_id) AS sub_count FROM 
+	SELECT *, getSubCount(Channels.channel_id) AS sub_count FROM 
     Channels INNER JOIN Subscribes ON Channels.channel_id = Subscribes.Subscribed_to_id
     WHERE channel_id = Channels.channel_id;
 END //
@@ -116,16 +129,32 @@ CREATE PROCEDURE listSubscribedTo(
 	IN channel_id INT
 )
 BEGIN
-	SELECT Channels.channel_name, getSubCount(Channels.channel_id) AS sub_count FROM 
+	SELECT *, getSubCount(Channels.channel_id) AS sub_count FROM 
     Channels INNER JOIN Subscribes ON Channels.channel_id = Subscribes.subscribed_to_id
     WHERE channel_id = Subscribes.subscriber_id;
+END //
+
+CREATE PROCEDURE getChannel(
+	IN channel_id INT
+)
+BEGIN
+	SELECT *, getSubCount(Channels.channel_id) AS sub_count FROM Channels 
+    WHERE Channels.channel_id = channel_id;
+END //
+
+CREATE PROCEDURE getVideo(
+	IN video_id INT
+)
+BEGIN
+	SELECT * FROM Videos 
+    WHERE Videos.video_id = video_id;
 END //
 
 CREATE PROCEDURE listRandomChannels(
 	IN count INT
 )
 BEGIN
-	SELECT *, getSubCount(Channels.channel_id) AS sub_count FROM Channels
+	SELECT * FROM Channels
     ORDER BY RAND()
     LIMIT count;
 END //
@@ -137,6 +166,15 @@ BEGIN
 	SELECT * FROM Videos
     ORDER BY RAND()
     LIMIT count;
+END //
+
+CREATE PROCEDURE listVideosByChannel(
+	IN channel_id INT
+)
+BEGIN
+	SELECT * FROM Videos
+    WHERE Videos.channel_id = channel_id
+        ORDER BY Videos.upload_date;
 END //
 
 CREATE PROCEDURE search(IN searchString varchar(64))
