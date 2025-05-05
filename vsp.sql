@@ -154,7 +154,7 @@ CREATE PROCEDURE listRandomChannels(
 	IN count INT
 )
 BEGIN
-	SELECT * FROM Channels
+	SELECT *, getSubCount(channel_id) AS sub_count FROM Channels
     ORDER BY RAND()
     LIMIT count;
 END //
