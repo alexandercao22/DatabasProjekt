@@ -38,11 +38,26 @@ CREATE PROCEDURE listComments(
 	IN video_id INT
 )
 BEGIN
-	SELECT Channels.channel_name, Comments.upload_date, Comments.text FROM 
+	SELECT Comments.channel_id, Channels.channel_name, Comments.upload_date, comments.text, comments.likes FROM 
     Comments INNER JOIN Channels ON Comments.channel_id = Channels.channel_id
     WHERE video_id = Comments.video_id;
 END //
+DELIMITER ;
 
+DROP PROCEDURE listComments;
+
+DELIMITER //
+CREATE PROCEDURE likeVideo(
+	IN video_id INT
+)
+BEGIN
+	UPDATE Videos
+    SET Videos.likes = Videos.likes + 1
+    WHERE Videos.video_id = video_id;
+END //
+DELIMITER ;
+
+DELIMITER //
 CREATE FUNCTION getSubCount(
 	channel_id INT
 )
@@ -55,7 +70,9 @@ BEGIN
     WHERE channel_id = subscribed_to_id;
     RETURN result;
 END //
+DELIMITER ;
 
+DELIMITER //
 CREATE PROCEDURE listSubscribers(
 	IN channel_id INT
 )
@@ -64,7 +81,9 @@ BEGIN
     Channels INNER JOIN Subscribes ON Channels.channel_id = Subscribes.Subscribed_to_id
     WHERE channel_id = Channels.channel_id;
 END //
+DELIMITER ;
 
+DELIMITER //
 CREATE PROCEDURE listSubscribedTo(
 	IN channel_id INT
 )
@@ -73,16 +92,42 @@ BEGIN
     Channels INNER JOIN Subscribes ON Channels.channel_id = Subscribes.subscribed_to_id
     WHERE channel_id = Subscribes.subscriber_id;
 END //
+DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE getChannel(
+	IN channel_id INT
+)
+BEGIN
+	SELECT *, getSubCount(Channels.channel_id) AS sub_count FROM Channels 
+    WHERE Channels.channel_id = channel_id;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE getVideo(
+	IN video_id INT
+)
+BEGIN
+	SELECT * FROM Videos 
+    WHERE Videos.video_id = video_id;
+END //
+DELIMITER ;
+
+DROP PROCEDURE getVideo;
+
+DELIMITER //
 CREATE PROCEDURE listRandomChannels(
 	IN count INT
 )
 BEGIN
-	SELECT *, getSubCount(Channels.channel_id) AS sub_count FROM Channels
+	SELECT * FROM Channels
     ORDER BY RAND()
     LIMIT count;
 END //
+DELIMITER ;
 
+DELIMITER //
 CREATE PROCEDURE listRandomVideos(
 	IN count INT
 )
@@ -91,7 +136,20 @@ BEGIN
     ORDER BY RAND()
     LIMIT count;
 END //
+DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE listVideosByChannel(
+	IN channel_id INT
+)
+BEGIN
+	SELECT * FROM Videos
+    WHERE Videos.channel_id = channel_id
+        ORDER BY Videos.upload_date;
+END //
+DELIMITER ;
+
+DELIMITER //
 CREATE PROCEDURE search(IN searchString varchar(64))
 NOT DETERMINISTIC
 BEGIN
@@ -102,7 +160,9 @@ BEGIN
 		WHERE video_name LIKE concat('%', searchString, '%')
         ORDER BY RAND();
 END//
+DELIMITER ;
 
+DELIMITER //
 CREATE PROCEDURE searchSorted(IN searchString varchar(64))
 NOT DETERMINISTIC
 BEGIN
@@ -116,8 +176,7 @@ END//
 DELIMITER ;
 
 DROP PROCEDURE search;
-DROP PROCEDURE listRandomChannels;
+DROP PROCEDURE searchSorted;
 
 CALL searchSorted('a');
-CALL search('a');
-CALL listRandomChannels(10);
+CALL search('f');

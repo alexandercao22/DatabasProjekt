@@ -71,3 +71,41 @@ class Database:
             ret = result.fetchall()
             break
         return ret
+    
+    def get_videos_by_channel(self, channel_id):
+        """Search in the database"""
+        ret = []
+        self.cursor.callproc('listVideosByChannel', [channel_id])
+        for result in self.cursor.stored_results():
+            ret = result.fetchall()
+            break
+        return ret
+    
+    def list_comments(self, video_id):
+        """Search in the database"""
+        ret = []
+        self.cursor.callproc('listComments', [video_id])
+        for result in self.cursor.stored_results():
+            ret = result.fetchall()
+            break
+        return ret
+    
+    def like_video(self, video_id):
+        """Like video in database"""
+        self.cursor.callproc('likeVideo', [video_id])
+
+    def get_channel(self, channel_id):
+        ret = []
+        self.cursor.callproc('getChannel', [channel_id])
+        for result in self.cursor.stored_results():
+            ret = result.fetchall()
+            break
+        return ret[0]
+    
+    def get_video(self, video_id):
+        ret = []
+        self.cursor.callproc('getVideo', [video_id])
+        for result in self.cursor.stored_results():
+            ret = result.fetchall()
+            break
+        return ret[0]

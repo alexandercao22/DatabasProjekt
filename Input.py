@@ -1,13 +1,13 @@
 """I/O"""
-from database import Database
-from display import Display
+from Database import Database
+from Display import Display
 
 class Input:
     """Input class"""
 
     def __init__(self):
-        # self.db = Database('localhost', 'root', '1234', 'vsp') # Arvid
-        self.db = Database('localhost', 'root', 'admin', 'vsp') # Alexander
+        self.db = Database('localhost', 'root', '1234', 'vsp') # Arvid
+        # self.db = Database('localhost', 'root', 'admin', 'vsp') # Alexander
         self.display = Display()
         print(
             "\n--- Command Template ---\n"
@@ -57,11 +57,13 @@ class Input:
         for result in results:
             if result['Type'] == 'Channel':
                 self.extraCommands[str(i)] = self.show_channel
-                self.arguments[str(i)] = result
+                channel = self.db.get_channel(result['ID'])
+                self.arguments[str(i)] = channel
                 i += 1
             elif result['Type'] == 'Video':
                 self.extraCommands[str(i)] = self.show_video
-                self.arguments[str(i)] = result
+                video = self.db.get_video(result['ID'])
+                self.arguments[str(i)] = video
                 i += 1
         return True
 
@@ -76,11 +78,13 @@ class Input:
         for result in results:
             if result['Type'] == 'Channel':
                 self.extraCommands[str(i)] = self.show_channel
-                self.arguments[str(i)] = result
+                channel = self.db.get_channel(result['ID'])
+                self.arguments[str(i)] = channel
                 i += 1
             elif result['Type'] == 'Video':
                 self.extraCommands[str(i)] = self.show_video
-                self.arguments[str(i)] = result
+                video = self.db.get_video(result['ID'])
+                self.arguments[str(i)] = video
                 i += 1
         return True
 
@@ -141,18 +145,35 @@ class Input:
         return self == temp
 
     def show_channel(self, channel):
-        """Prints channel"""
-        print(f"Channel: {channel}")
+        """Displays channel and loads available commands"""
         self.extraCommands.clear()
         self.arguments.clear()
-        return self.dummy
+        videos = self.db.get_videos_by_channel(channel['channel_id'])
+        self.extraCommands['list subscribers'] = self.list_subscribers
+        self.arguments['list subscribers'] = channel['channel_id']
+        self.extraCommands['list subscribes to'] = self.list_subscribed_to
+        self.arguments['list subscribes to'] = channel['channel_id']
+        i = 1
+        for video in videos:
+            self.extraCommands[str(i)] = self.show_video
+            self.arguments[str(i)] = video
+            i += 1
+
+        self.display.channel(channel, videos)
+        return True
 
     def show_video(self, video):
-        """Prints video"""
-        print(f"Video: {video}")
+        """Displays video and loads available commands"""
         self.extraCommands.clear()
         self.arguments.clear()
-        return self.dummy
+        comments = self.db.list_comments(video['video_id'])
+        self.extraCommands['channel'] = self.show_channel
+        self.arguments['channel'] = self.db.get_channel(video['channel_id'])
+        self.extraCommands['like'] = self.db.like_video
+        self.arguments['like'] = video['video_id']
+
+        self.display.video(video, comments)
+        return True
 
     def get_command(self):
         """Get command input and validates the input. 
@@ -161,12 +182,12 @@ class Input:
             command = self.get_input()
 
             if command in self.baseCommands:
-                return self.baseCommands[command]
+                return self.baseCommands[command](self)
 
             if command in self.extraCommands:
                 if command in self.arguments:
                     return self.extraCommands[command](self.arguments[command])
-                return self.extraCommands[command]
+                return self.extraCommands[command](self)
 
             print(f"Error: {command} is not valid! Try again:")
 
@@ -174,8 +195,7 @@ class Input:
         """Main loop"""
         run = True
         while run:
-            func = self.get_command()
-            run = func(self)
+            run = self.get_command()
 
     def quit(self):
         """Quit"""

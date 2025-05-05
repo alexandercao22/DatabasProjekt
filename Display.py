@@ -70,9 +70,9 @@ class Display:
             for result in results:
                 i += 1
                 if result['Type'] == 'Channel':
-                    print(f"{i}. {result['Name']}: {result['Metric']} subscribers")
+                    print(f"{i}. (Channel) {result['Name']}: {result['Metric']} subscribers")
                 elif result['Type'] == 'Video':
-                    print(f"{i}. {result['Name']}: {result['Metric']} views")
+                    print(f"{i}. (Video) {result['Name']}: {result['Metric']} views")
 
     def channel(self, channel, videos):
         """Displays all information of a channel and the videos uploaded by that channel"""
@@ -87,14 +87,16 @@ class Display:
             )
         print("--- Actions ---")
         print("list subscribers. - lists all current channel subscribers\n",
-            f"list subscribes to. - lists all channels subscribed to by \
-            {channel['channel_name']}\n\n"
+            f"list subscribes to. - lists all channels subscribed to by {channel['channel_name']}\n\n"
         )
         print(f"--- Videos by {channel['channel_name']} ---")
-        i = 0
-        for video in videos:
-            i += 1
-            print(f"{i}. {video['video_name']}: {video['views']} views")
+        if len(videos) == 0:
+            print("There are no videos uploaded by this channel")
+        else:
+            i = 0
+            for video in videos:
+                i += 1
+                print(f"{i}. {video['video_name']}: {video['views']} views")
 
     def video(self, video, comments):
         """Displays all information of a video including its comments"""
@@ -113,12 +115,15 @@ class Display:
               "like. - like the video\n\n"
             )
         print("--- Comments ---")
-        for comment in comments:
-            print(
-                f"@{comment['channel_name']}: {comment['upload_date']}\n",
-                f"{comment['text']}\n",
-                f"Likes: {comment['likes']}\n"
-                )
+        if len(comments) == 0:
+            print("There are no comments on this video")
+        else:
+            for comment in comments:
+                print(
+                    f"@{comment['channel_name']}: {comment['upload_date']}\n",
+                    f"{comment['text']}\n",
+                    f"Likes: {comment['likes']}\n"
+                    )
 
     def list_subscribers(self, subscribed_to, channels):
         """Displays all channels that are subscribed to 'subscribedTo'"""
