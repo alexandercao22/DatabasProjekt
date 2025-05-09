@@ -7,4 +7,4 @@ if __name__ == "__main__":
     app.setup_database()
 
     app.run()
-    del app
+    # del app

@@ -4,13 +4,18 @@ from mysql.connector import Error
 
 class Database:
     """database"""
+    host = None
+    user = None
+    password = None
+    database = "vsp"
+
     def __init__(self) :
         self.connection = None
         self.cursor = None
 
-    def __del__(self) :
-        self.connection.close()
-        self.cursor.close()
+    # def __del__(self) :
+    #     self.connection.close()
+    #     self.cursor.close()
 
     def connect(self, host, user, password):
         """Connect"""
@@ -22,6 +27,9 @@ class Database:
             )
             if self.connection.is_connected():
                 self.cursor = self.connection.cursor(dictionary=True)
+                self.host = host
+                self.user = user
+                self.password = password
                 print("Connected")
                 return True
         except Error as e:
@@ -30,6 +38,17 @@ class Database:
 
     def setup(self):
         """Setup"""
+        self.cursor.execute("CREATE DATABASE IF NOT EXISTS vsp;")
+        self.connection = mysql.connector.connect(
+            host = self.host,
+            user = self.user,
+            password = self.password,
+            database = self.database
+        )
+        if self.connection.is_connected():
+            self.cursor = self.connection.cursor(dictionary=True)
+            print("Connected to vsp")
+
         file = "vsp.sql"
         try:
             fd = open(file, "r", encoding="utf-8")
