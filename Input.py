@@ -148,9 +148,9 @@ class Input:
         self.arguments.clear()
         videos = self.db.get_videos_by_channel(channel['channel_id'])
         self.extraCommands['list subscribers'] = self.list_subscribers
-        self.arguments['list subscribers'] = channel['channel_id']
+        self.arguments['list subscribers'] = channel
         self.extraCommands['list subscribes to'] = self.list_subscribed_to
-        self.arguments['list subscribes to'] = channel['channel_id']
+        self.arguments['list subscribes to'] = channel
         i = 1
         for video in videos:
             self.extraCommands[str(i)] = self.show_video
@@ -181,12 +181,10 @@ class Input:
 
             if command in self.baseCommands:
                 return self.baseCommands[command](self)
-                return self.baseCommands[command](self)
 
             if command in self.extraCommands:
                 if command in self.arguments:
                     return self.extraCommands[command](self.arguments[command])
-                return self.extraCommands[command](self)
                 return self.extraCommands[command](self)
 
             print(f"Error: {command} is not valid! Try again:")
