@@ -1,7 +1,7 @@
 """Database class"""
 import mysql.connector
 from mysql.connector import Error
- 
+
 class Database:
     """database"""
     def __init__(self) :
@@ -11,9 +11,9 @@ class Database:
     def __del__(self) :
         self.connection.close()
         self.cursor.close()
-        
-        
+
     def connect(self, host, user, password):
+        """Connect"""
         try:
             self.connection = mysql.connector.connect(
                 host = host,
@@ -27,8 +27,9 @@ class Database:
         except Error as e:
             print("Error connecting to MySQL:", e)
             return False
-    
+
     def setup(self):
+        """Setup"""
         # Perform database setup operations
         setup = False
 
