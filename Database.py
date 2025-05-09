@@ -1,16 +1,32 @@
 """Database class"""
 import mysql.connector
-
+from mysql.connector import Error
+ 
 class Database:
     """database"""
-    def __init__(self, host, user, password, database) :
-        self.connection = mysql.connector.connect(
-            host = host,
-            user = user,
-            password = password,
-            database = database
-        )
-        self.cursor = self.connection.cursor(dictionary=True)
+    def __init__(self) :
+        self.connection = None
+        self.cursor = None
+        
+        
+    def connect(self, host, user, password):
+        try:
+            self.connection = mysql.connector.connect(
+                host = host,
+                user = user,
+                password = password,
+            )
+            if self.connection.is_connected():
+                self.cursor = self.connection.cursor(dictionary=True)
+                print("Connected")
+                return True
+        except Error as e:
+            print("Error connecting to MySQL:", e)
+            return False
+    
+    def setup(self):
+        # Perform database setup operations
+        setup = False
 
     def fetch_all(self, table):
         """Get whole table"""

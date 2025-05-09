@@ -4,8 +4,22 @@ import os
 # Virtual class
 class Display:
     """Class for displaying information to the user"""
-    def __init__(self):
+
+    def start(self):
         print("Welcome to VSP!")
+        print(
+            "--- Command Template ---\n"
+            "command. description <- type 'command' to execute description\n"
+            "\n"
+            "--- General Commands ---\n"
+            "menu. - return to main menu\n"
+            "search. - search for a channel or video\n"
+            "search sorted. - sorts videos by views and channels by subscribers\n"
+            "list channels. - lists 10 random channels\n"
+            "list videos. - lists 10 random videos\n"
+            "quit. - exit application"
+        )
+
 
     def clear_terminal(self):
         """Clears the terminal of text"""

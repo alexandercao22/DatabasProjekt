@@ -4,27 +4,40 @@ from Display import Display
 
 class Input:
     """Input class"""
-
     def __init__(self):
-        # self.db = Database('localhost', 'root', '1234', 'vsp') # Arvid
-        self.db = Database('localhost', 'root', 'admin', 'vsp') # Alexander
+        self.db = Database()
         self.display = Display()
-        print(
-            "\n--- Command Template ---\n"
-            "command. description <- type 'command' to execute description\n"
-            "\n"
-            "--- General Commands ---\n"
-            "menu. - return to main menu\n"
-            "search. - search for a channel or video\n"
-            "search sorted. - sorts videos by views and channels by subscribers\n"
-            "list channels. - lists 10 random channels\n"
-            "list videos. - lists 10 random videos\n"
-            "quit. - exit application"
-        )
+
+    def get_login_input(self, attempts):
+        """Gets the login input and returns it a dictionary
+        with keys: host, user, password
+        """
+        ret = {}
+        if attempts > 0:
+            print("---- Login failed, try again ----")
+        else:
+            print("---- Login ----")
+        ret['host'] = input("Host: ")
+        ret['user'] = input("User: ")
+        ret['password'] = input("Password: ")
+        self.display.clear_terminal()
+        return ret
+    
+    def setup_database(self):
+        connected = False
+        attempts = 0
+        while not connected:
+            login = self.get_login_input(attempts)
+            connected = self.db.connect(login['host'], login['user'], login['password'])
+            attempts += 1
+
+        self.db.setup()
+        self.display.start()
 
     def get_input(self):
         """General input function"""
         return input("-> ")
+        
 
     def get_search_input(self, is_sorted):
         """Gets the search results of a string\n
