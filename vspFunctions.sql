@@ -100,7 +100,7 @@ BEGIN
 	SELECT video_id AS ID, video_name AS Name, views AS Metric, 'Video' AS Type FROM Videos
 		WHERE video_name LIKE concat('%', searchString, '%')
         ORDER BY RAND();
-END//
+END //
 
 CREATE PROCEDURE searchSorted(IN searchString varchar(64))
 NOT DETERMINISTIC
@@ -111,5 +111,5 @@ BEGIN
 	SELECT video_id AS ID, video_name AS Name, views AS Metric, 'Video' AS Type FROM Videos
 		WHERE video_name LIKE concat('%', searchString, '%')
         ORDER BY Type ASC, Metric DESC;
-END//
+END //
 DELIMITER ;

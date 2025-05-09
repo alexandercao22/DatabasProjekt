@@ -39,15 +39,7 @@ class Database:
     def setup(self):
         """Setup"""
         self.cursor.execute("CREATE DATABASE IF NOT EXISTS vsp;")
-        self.connection = mysql.connector.connect(
-            host = self.host,
-            user = self.user,
-            password = self.password,
-            database = self.database
-        )
-        if self.connection.is_connected():
-            self.cursor = self.connection.cursor(dictionary=True)
-            print("Connected to vsp")
+        self.cursor.execute("USE vsp;")
 
         file = "vsp.sql"
         try:
@@ -55,7 +47,7 @@ class Database:
         except FileNotFoundError:
             print(f"Could not open {file}")
             return False
-        
+
         sql_file = fd.read()
         fd.close()
         sql_commands = sql_file.split(';')
@@ -67,7 +59,7 @@ class Database:
             except IOError as msg:
                 print(f"Command skipped: {msg}")
                 return False
-        
+
         self.cursor.execute(
             "DELIMITER // " \
             "CREATE PROCEDURE listComments( " \
@@ -152,7 +144,7 @@ class Database:
             "    WHERE Videos.channel_id = channel_id " \
             "        ORDER BY Videos.upload_date; " \
             "END // " \
-            "CREATE PROCEDURE search(IN searchString varchar(64)) " \
+            "CREATE PROCEDURE search(IN searchString varchar(64))\n" \
             "NOT DETERMINISTIC " \
             "BEGIN " \
             "	SELECT channel_id AS ID, channel_name AS Name, getSubCount(channel_id) AS Metric, 'Channel' AS Type FROM Channels " \
@@ -174,6 +166,17 @@ class Database:
             "END// " \
             "DELIMITER ; "
         )
+
+        self.connection = mysql.connector.connect(
+            host = self.host,
+            user = self.user,
+            password = self.password,
+            database = self.database
+        )
+        if self.connection.is_connected():
+            self.cursor = self.connection.cursor(dictionary=True)
+            print("Connected to vsp again")
+
         return True
 
     def fetch_all(self, table):
@@ -235,7 +238,7 @@ class Database:
             ret = result.fetchall()
             break
         return ret
-    
+
     def get_videos_by_channel(self, channel_id):
         """Search in the database"""
         ret = []
@@ -244,7 +247,7 @@ class Database:
             ret = result.fetchall()
             break
         return ret
-    
+
     def list_comments(self, video_id):
         """Search in the database"""
         ret = []
@@ -253,21 +256,23 @@ class Database:
             ret = result.fetchall()
             break
         return ret
-    
+
     def like_video(self, video_id):
         """Like video in database"""
         self.cursor.callproc('likeVideo', [video_id])
         return True
 
     def get_channel(self, channel_id):
+        """Get channel"""
         ret = []
         self.cursor.callproc('getChannel', [channel_id])
         for result in self.cursor.stored_results():
             ret = result.fetchall()
             break
         return ret[0]
-    
+
     def get_video(self, video_id):
+        """Get video"""
         ret = []
         self.cursor.callproc('getVideo', [video_id])
         for result in self.cursor.stored_results():

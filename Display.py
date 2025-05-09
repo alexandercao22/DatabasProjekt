@@ -6,6 +6,7 @@ class Display:
     """Class for displaying information to the user"""
 
     def start(self):
+        """Start display"""
         print("Welcome to VSP!")
         print(
             "--- Command Template ---\n"
