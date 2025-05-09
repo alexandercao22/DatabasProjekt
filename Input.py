@@ -22,8 +22,9 @@ class Input:
         ret['password'] = input("Password: ")
         self.display.clear_terminal()
         return ret
-    
+
     def setup_database(self):
+        """Setup database"""
         connected = False
         attempts = 0
         while not connected:
@@ -37,7 +38,6 @@ class Input:
     def get_input(self):
         """General input function"""
         return input("-> ")
-        
 
     def get_search_input(self, is_sorted):
         """Gets the search results of a string\n
@@ -204,7 +204,6 @@ class Input:
         """Main loop"""
         run = True
         while run:
-            run = self.get_command()
             run = self.get_command()
 
     def quit(self):
