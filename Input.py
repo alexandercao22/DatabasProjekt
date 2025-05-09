@@ -1,15 +1,13 @@
 """I/O"""
 from Database import Database
 from Display import Display
-from Database import Database
-from Display import Display
 
 class Input:
     """Input class"""
 
     def __init__(self):
-        self.db = Database('localhost', 'root', '1234', 'vsp') # Arvid
-        # self.db = Database('localhost', 'root', 'admin', 'vsp') # Alexander
+        # self.db = Database('localhost', 'root', '1234', 'vsp') # Arvid
+        self.db = Database('localhost', 'root', 'admin', 'vsp') # Alexander
         self.display = Display()
         print(
             "\n--- Command Template ---\n"

@@ -93,6 +93,7 @@ class Database:
     def like_video(self, video_id):
         """Like video in database"""
         self.cursor.callproc('likeVideo', [video_id])
+        return True
 
     def get_channel(self, channel_id):
         ret = []
