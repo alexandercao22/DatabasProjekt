@@ -7,6 +7,10 @@ class Database:
     def __init__(self) :
         self.connection = None
         self.cursor = None
+
+    def __del__(self) :
+        self.connection.close()
+        self.cursor.close()
         
         
     def connect(self, host, user, password):
