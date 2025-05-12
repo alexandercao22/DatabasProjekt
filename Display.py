@@ -10,7 +10,7 @@ class Display:
         print("Welcome to VSP!")
         print(
             "--- Command Template ---\n"
-            "command. description <- type 'command' to execute description\n"
+            "command. - description <- type 'command' to execute description\n"
             "\n"
             "--- General Commands ---\n"
             "menu. - return to main menu\n"
@@ -142,6 +142,7 @@ class Display:
 
     def list_subscribers(self, subscribed_to, channels):
         """Displays all channels that are subscribed to 'subscribedTo'"""
+        self.clear_terminal()
         print(f"Here are the channels subscribed to {subscribed_to['channel_name']}:")
         i = 0
         for channel in channels:
@@ -150,6 +151,7 @@ class Display:
 
     def list_subscribed_to(self, subscriber, channels):
         """Displays all chanels subscribed to by 'subscriber'"""
+        self.clear_terminal()
         print(f"Here are the channels that {subscriber['channel_name']} is subscribed to:")
         i = 0
         for channel in channels:

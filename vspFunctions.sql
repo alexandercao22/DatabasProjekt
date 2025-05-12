@@ -35,8 +35,8 @@ CREATE PROCEDURE listSubscribers(
 )
 BEGIN
 	SELECT *, getSubCount(Channels.channel_id) AS sub_count FROM 
-    Channels INNER JOIN Subscribes ON Channels.channel_id = Subscribes.Subscribed_to_id
-    WHERE channel_id = Channels.channel_id;
+    Channels INNER JOIN Subscribes ON Channels.channel_id = Subscribes.Subscriber_id
+    WHERE channel_id = Subscribes.subscribed_to_id;
 END //
 
 CREATE PROCEDURE listSubscribedTo(

@@ -95,8 +95,8 @@ class Database:
             ") " \
             "BEGIN " \
             "	SELECT *, getSubCount(Channels.channel_id) AS sub_count FROM  " \
-            "    Channels INNER JOIN Subscribes ON Channels.channel_id = Subscribes.Subscribed_to_id " \
-            "    WHERE channel_id = Channels.channel_id; " \
+            "    Channels INNER JOIN Subscribes ON Channels.channel_id = Subscribes.Subscriber_id " \
+            "    WHERE channel_id = Subscribes.subscribed_to_id; " \
             "END // " \
             "CREATE PROCEDURE listSubscribedTo( " \
             "	IN channel_id INT " \
@@ -175,7 +175,6 @@ class Database:
         )
         if self.connection.is_connected():
             self.cursor = self.connection.cursor(dictionary=True)
-            print("Connected to vsp again")
 
         return True
 
